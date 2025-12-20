@@ -1,0 +1,1 @@
+variable "niic" { type = map(any)}
