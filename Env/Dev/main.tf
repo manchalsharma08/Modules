@@ -3,13 +3,13 @@ module "rg-mod" {
     rg = var.abhi_rg
 }
 
-module "vnet-mod" {
-    source = "../../Root/Vnet"
-    vnet = var.abhi_vnet
-}
+# module "vnet-mod" {
+ #   source = "../../Root/Vnet"
+ #   vnet = var.abhi_vnet
+#}
 
-module "snet-mod" {
-    source = "../../Root/SubNet"
-    snet = var.abhi_snet
+# module "snet-mod" {
+ #   source = "../../Root/SubNet"
+ #   snet = var.abhi_snet
 
-}
+# }
