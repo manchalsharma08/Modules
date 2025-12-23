@@ -1,12 +1,10 @@
 parameters:
-  approvers: ' '
-  notifyUsers: ' '
-  
-  
-  
-  steps:
-    - task: ManualValidation@1
-      inputs:
-        notifyUsers: '${{ parameters.notifyUsers }}'
-        approvers: '${{ parameters.approvers }}'
-        instructions: 'Please approve Terraform Apply'
+  approvers: ''
+  notifyUsers: ''
+
+steps:
+- task: ManualValidation@1
+  inputs:
+    notifyUsers: ${{ parameters.approvers }}
+    approvers: ${{ parameters.approvers }}
+    instructions: 'Please approve Terraform Apply'
