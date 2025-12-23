@@ -16,7 +16,7 @@ steps:
     terraformVersion: ${{ parameters.terraformVersion }}
 
 - task: TerraformTask@5
-  condition: ne('${{ parameters.command }}', 'fmt')
+  condition: ne('${{ parameters.command }}', 'init')
   inputs:
     provider: 'azurerm'
     command: ${{ parameters.command }}
@@ -27,23 +27,32 @@ steps:
     backendAzureRmStorageAccountName: ${{ parameters.backendStorage }}
     backendAzureRmContainerName: ${{ parameters.backendContainer }}
     backendAzureRmKey: ${{ parameters.backendKey }}
-    environmentServiceNameAzureRM: ${{ parameters.azureServiceConnection }}
-
+    
 - task: TerraformTask@5
   condition: eq('${{ parameters.command }}', 'fmt')
   inputs:
     provider: 'azurerm'
     command: 'custom'
     customCommand: 'fmt'
+    workingDirectory: ${{ parameters.tfWorkingDir }}
     outputTo: 'console'
+    
+- task: TerraformTask@5
+  condition: q('${{ parameters.command }}', 'plan')
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: ${{ parameters.tfWorkingDir }}
+    
     environmentServiceNameAzureRM: ${{ parameters.azureServiceConnection }}
+    environmentAzureRmOverrideSubscriptionID: ${{ parameters.subscriptionId }}
 
 - task: TerraformTask@5
-  condition: and(eq('${{ parameters.command }}', 'apply'), eq(${{ parameters.autoApprove }}, true))
+  condition: eq('${{ parameters.command }}', 'apply')
   inputs:
     provider: 'azurerm'
     command: 'apply'
     workingDirectory: ${{ parameters.tfWorkingDir }}
-    commandOptions: '--auto-approve'
+    commandOptions: ${{ parameters.autoApprove && '--auto-approve' || '' }}
     environmentServiceNameAzureRM: ${{ parameters.azureServiceConnection }}
     environmentAzureRmOverrideSubscriptionID: ${{ parameters.subscriptionId }}

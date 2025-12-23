@@ -1,11 +1,12 @@
-papameters:
-  approvers: ' '  
+parameters:
+  approvers: ' '
+  notifyUsers: ' '
   
   
   
   steps:
     - task: ManualValidation@1
       inputs:
-        notifyUsers: '@abhi'
-        approvers: '@abhi'
+        notifyUsers: '${{ parameters.notifyUsers }}'
+        approvers: '${{ parameters.approvers }}'
         instructions: 'Please approve Terraform Apply'

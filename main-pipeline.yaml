@@ -15,6 +15,7 @@ variables:
   backendContainer: 'myrgccon'
   backendKey: 'ram.terraform.tfstate'
   approvers: '@abhi'
+  notifyUsers: '@abhi'
 
 stages:
 - stage: INITSTAGE
@@ -35,15 +36,12 @@ stages:
         backendKey: $(backendKey)
         command: init
 
-    - template: terraform-template.yaml
-      parameters:
-        tfWorkingDir: $(tfWorkingDir)
-        azureServiceConnection: $(azureServiceConnection)
-        command: validate
+   
 
     - template: terraform-template.yaml
       parameters:
         azureServiceConnection: $(azureServiceConnection)
+        tfWorkingDir: $(tfWorkingDir)
         command: fmt
 
     - template: terraform-template.yaml
@@ -62,6 +60,7 @@ stages:
     - template: manualVali-template.yaml
       parameters:
         approvers: $(approvers)
+        notifyUsers: $(notifyUsers)
   
 - stage: InfraDeploymentStage
   displayName: "Terraform Apply"
