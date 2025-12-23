@@ -53,6 +53,6 @@ steps:
     provider: 'azurerm'
     command: 'apply'
     workingDirectory: ${{ parameters.tfWorkingDir }}
-    commandOptions: ${{ parameters.autoApprove && '--auto-approve' || '' }}
+    commandOptions: '-auto-approve'
     environmentServiceNameAzureRM: ${{ parameters.azureServiceConnection }}
     environmentAzureRmOverrideSubscriptionID: ${{ parameters.subscriptionId }}
