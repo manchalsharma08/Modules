@@ -23,7 +23,7 @@ stages:
   - job: TerraformInitPlan
     steps:
 
-    - template: terraform-template.yml
+    - template: terraform-template.yaml
       parameters:
         terraformVersion: $(terraformVersion)
         tfWorkingDir: $(tfWorkingDir)
@@ -35,18 +35,18 @@ stages:
         backendKey: $(backendKey)
         command: init
 
-    - template: terraform-template.yml
+    - template: terraform-template.yaml
       parameters:
         tfWorkingDir: $(tfWorkingDir)
         azureServiceConnection: $(azureServiceConnection)
         command: validate
 
-    - template: terraform-template.yml
+    - template: terraform-template.yaml
       parameters:
         azureServiceConnection: $(azureServiceConnection)
         command: fmt
 
-    - template: terraform-template.yml
+    - template: terraform-template.yaml
       parameters:
         tfWorkingDir: $(tfWorkingDir)
         azureServiceConnection: $(azureServiceConnection)
@@ -59,7 +59,7 @@ stages:
   - job: ManualApproval
     pool: server
     steps:
-    - template: manualVali-template.yml
+    - template: manualVali-template.yaml
       parameters:
         approvers: $(approvers)
   
@@ -69,7 +69,7 @@ stages:
   jobs:
   - job: TerraformApply
     steps:
-    - template: terraform-template.yml
+    - template: terraform-template.yaml
       parameters:
         terraformVersion: $(terraformVersion)
         tfWorkingDir: $(tfWorkingDir)
@@ -81,7 +81,7 @@ stages:
         backendKey: $(backendKey)
         command: init
 
-    - template: terraform-template.yml
+    - template: terraform-template.yaml
       parameters:
         tfWorkingDir: $(tfWorkingDir)
         azureServiceConnection: $(azureServiceConnection)
