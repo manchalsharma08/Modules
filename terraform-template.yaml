@@ -16,7 +16,7 @@ steps:
     terraformVersion: ${{ parameters.terraformVersion }}
 
 - task: TerraformTask@5
-  condition: ne('${{ parameters.command }}', 'init')
+  condition: eq('${{ parameters.command }}', 'init')
   inputs:
     provider: 'azurerm'
     command: ${{ parameters.command }}
