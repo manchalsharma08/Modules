@@ -38,7 +38,7 @@ steps:
     outputTo: 'console'
     
 - task: TerraformTask@5
-  condition: q('${{ parameters.command }}', 'plan')
+  condition: eq('${{ parameters.command }}', 'plan')
   inputs:
     provider: 'azurerm'
     command: 'plan'
