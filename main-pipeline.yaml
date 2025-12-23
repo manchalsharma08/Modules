@@ -1,0 +1,94 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool: Default
+
+variables:
+  terraformVersion: 'latest'
+  azureServiceConnection: 'ApplicationSC'
+  subscriptionId: 'b6571c78-f766-4999-8358-e9602abe50cf'
+  tfWorkingDir: '$(System.DefaultWorkingDirectory)/environment/dev'
+  backendRG: 'MyRGc'
+  backendStorage: 'myst5679807578jhj'
+  backendContainer: 'myrgccon'
+  backendKey: 'ram.terraform.tfstate'
+  approvers: '@abhi'
+
+stages:
+- stage: INITSTAGE
+  displayName: "Terraform Init & Plan"
+  jobs:
+  - job: TerraformInitPlan
+    steps:
+
+    - template: terraform-template.yml
+      parameters:
+        terraformVersion: $(terraformVersion)
+        tfWorkingDir: $(tfWorkingDir)
+        azureServiceConnection: $(azureServiceConnection)
+        subscriptionId: $(subscriptionId)
+        backendRG: $(backendRG)
+        backendStorage: $(backendStorage)
+        backendContainer: $(backendContainer)
+        backendKey: $(backendKey)
+        command: init
+
+    - template: terraform-template.yml
+      parameters:
+        tfWorkingDir: $(tfWorkingDir)
+        azureServiceConnection: $(azureServiceConnection)
+        command: validate
+
+    - template: terraform-template.yml
+      parameters:
+        azureServiceConnection: $(azureServiceConnection)
+        command: fmt
+
+    - template: terraform-template.yml
+      parameters:
+        tfWorkingDir: $(tfWorkingDir)
+        azureServiceConnection: $(azureServiceConnection)
+        subscriptionId: $(subscriptionId)
+        command: plan
+
+- stage: ValidationStage
+  displayName: "Manual Approval"
+  jobs:
+  - job: ManualApproval
+    pool: server
+    steps:
+    - template: manualVali-template.yml
+      parameters:
+        approvers: $(approvers)
+  
+- stage: InfraDeploymentStage
+  displayName: "Terraform Apply"
+  dependsOn: ValidationStage
+  jobs:
+  - job: TerraformApply
+    steps:
+    - template: terraform-template.yml
+      parameters:
+        terraformVersion: $(terraformVersion)
+        tfWorkingDir: $(tfWorkingDir)
+        azureServiceConnection: $(azureServiceConnection)
+        subscriptionId: $(subscriptionId)
+        backendRG: $(backendRG)
+        backendStorage: $(backendStorage)
+        backendContainer: $(backendContainer)
+        backendKey: $(backendKey)
+        command: init
+
+    - template: terraform-template.yml
+      parameters:
+        tfWorkingDir: $(tfWorkingDir)
+        azureServiceConnection: $(azureServiceConnection)
+        subscriptionId: $(subscriptionId)
+        backendRG: $(backendRG)
+        backendStorage: $(backendStorage)
+        backendContainer: $(backendContainer)
+        backendKey: $(backendKey)
+        command: apply
+        autoApprove: true

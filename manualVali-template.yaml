@@ -1,0 +1,11 @@
+papameters:
+  approvers: ' '  
+  
+  
+  
+  steps:
+    - task: ManualValidation@1
+      inputs:
+        notifyUsers: '@abhi'
+        approvers: '@abhi'
+        instructions: 'Please approve Terraform Apply'
